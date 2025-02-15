@@ -33,9 +33,15 @@ def get_dynamic_html(url):
 # Function to analyze sentiment using OpenAI API
 def analyze_sentiment_html(url, html_content):
     '''
-    send a request to openai api and get output of the form:
-    sentiment : phishing or not phishing
-    explanations: 3 relevant points supporting the sentiment
+    Send a request to OpenAI API and get output in JSON format:
+    {
+        "sentiment": "phishing" or "not phishing",
+        "explanations": [
+            "Reason 1",
+            "Reason 2",
+            "Reason 3"
+        ]
+    }
     '''
     api_url = "https://api.openai.com/v1/chat/completions"
 
@@ -43,13 +49,26 @@ def analyze_sentiment_html(url, html_content):
         "Authorization": f"Bearer {OPENAI_API_KEY}",
         "Content-Type": "application/json"
     }
+
+    prompt = f"""
+    Analyze the following webpage's HTML content and determine if it is a phishing website or not.
+    - Return the result in JSON format.
+    - The JSON should have:
+      - `"sentiment"`: `"phishing"` or `"not phishing"`
+      - `"explanations"`: A list of 3 reasons supporting the decision.
+    HTML Content:
+    {html_content}
+    """
+
     data = {
-        "model": "gpt-4o-mini",
+        "model": "gpt-4o",
         "messages": [
-            {"role": "system", "content": "Analyse HTML input of a webpage and perform a Sentiment analysis to detemine if it is a phishing website or not."},
-            {"role": "user", "content": html_content}
-        ]
+            {"role": "system", "content": "You are a cybersecurity expert analyzing web pages for phishing. Respond in JSON"},
+            {"role": "user", "content": prompt}
+        ],
+        "response_format": "json"
     }
+
     response = requests.post(api_url, json=data, headers=headers)
     
     if response.status_code == 200:
