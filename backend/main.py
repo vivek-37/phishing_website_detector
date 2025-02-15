@@ -20,7 +20,7 @@ app.add_middleware(
 class URLRequest(BaseModel):
     url: str
 
-# Function to fetch dynamic HTML (async version for FastAPI)
+# Function to fetch dynamic HTML
 def get_dynamic_html(url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)

@@ -1,7 +1,8 @@
 import requests
 from urllib.parse import urlparse
 
-API_KEY = "YOUR-API-KEY-HERE"  # Replace with your actual API key
+OPR_API_KEY = os.getenv("OPR_API_KEY", "your-opr-api-key")
+# API_KEY = "YOUR-API-KEY-HERE"  # Replace with your actual API key
 TOP_SITES_URL = "https://openpagerank.com/api/v1.0/getPageRank"
 
 def get_min(src, tar):
@@ -37,7 +38,7 @@ def extract_domain(url):
 
 def get_top_websites():
     """Fetches the top websites using Open Page Rank API."""
-    headers = {"API-OPR": API_KEY}
+    headers = {"API-OPR": OPR_API_KEY}
     
     response = requests.get(TOP_SITES_URL, headers=headers)
 
@@ -54,7 +55,7 @@ def find_most_similar_url(src):
     top_websites = get_top_websites()
     if not top_websites:
         print("Could not fetch top websites.")
-        return
+        return 
 
     src_domain = extract_domain(src)
     most_similar_url = None
@@ -71,7 +72,8 @@ def find_most_similar_url(src):
         print(f"Similarity Index: {highest_similarity}")
     else:
         print("No similar URLs found.")
+    return highest_similarity
 
 # Example usage
-src_url = "https://example.com/login"  # Replace with the URL you want to compare
-find_most_similar_url(src_url)
+# src_url = "https://example.com/login"  # Replace with the URL you want to compare
+# find_most_similar_url(src_url)
