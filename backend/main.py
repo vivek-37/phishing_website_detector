@@ -32,6 +32,13 @@ def get_dynamic_html(url):
 
 # Function to analyze sentiment using OpenAI API
 def analyze_sentiment(url, html_content):
+    '''
+    send a request to openai api and get output of the form:
+    sentiment : phishing or not phishing
+    explanations: 3 relevant points supporting the sentiment
+    '''
+    api_url = "https://api.openai.com/v1/chat/completions"
+
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
         "Content-Type": "application/json"
@@ -43,7 +50,7 @@ def analyze_sentiment(url, html_content):
             {"role": "user", "content": html_content}
         ]
     }
-    response = requests.post(OPENAI_API_URL, json=data, headers=headers)
+    response = requests.post(api_url, json=data, headers=headers)
     
     if response.status_code == 200:
         response_data = response.json()
@@ -53,6 +60,12 @@ def analyze_sentiment(url, html_content):
 
 # Function to classify phishing type using OpenAI API
 def classify_phishing(url, html_content):
+    '''
+    send a request to openai api and get output of the form:
+    classification: 1 or 2 keyword classification
+    '''
+    api_url = "https://api.openai.com/v1/chat/completions"
+
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
         "Content-Type": "application/json"
@@ -64,7 +77,7 @@ def classify_phishing(url, html_content):
             {"role": "user", "content": html_content}
         ]
     }
-    response = requests.post(OPENAI_API_URL, json=data, headers=headers)
+    response = requests.post(api_url, json=data, headers=headers)
     
     if response.status_code == 200:
         response_data = response.json()
