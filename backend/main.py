@@ -31,7 +31,7 @@ def get_dynamic_html(url):
         return html_content
 
 # Function to analyze sentiment using OpenAI API
-def analyze_sentiment(url, html_content):
+def analyze_sentiment_html(url, html_content):
     '''
     send a request to openai api and get output of the form:
     sentiment : phishing or not phishing
@@ -95,13 +95,25 @@ def test():
 def main(url: str = Form(...)):
     '''
     Recieving input from a form and starts computing all parameters
+    
+    model part:
+    1. decode url submitted by user into some dataset categories, also check if it exists
+    2. run the url_model with this data and get its score
+    3. scrape website for specific parameters present in dataset
+    4. run the other model with the data and get its score
+    
+
+    api part:
+    1. run a sentiment analysis based on html data
+    2. run a sentiment analysis based on webpage image data
+    3. if flagged as a phishing website, classify the type of phishing website 
     '''
     try:
         # Get the webpage content
         html_content = get_dynamic_html(url)
 
         # Perform sentiment analysis
-        result = analyze_sentiment(url, html_content)
+        result = analyze_sentiment_html(url, html_content)
 
         # Determine phishing type if suspicious
         if "phishing" in result.lower():
