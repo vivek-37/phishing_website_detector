@@ -1,0 +1,47 @@
+.circle-wrapper {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .circle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .circular-chart {
+    width: 100px;
+    height: 100px;
+    transform: rotate(-90deg);
+  }
+  
+  .circle-bg {
+    fill: none;
+    stroke: rgba(0, 255, 0, 0.3);
+    stroke-width: 3.8;
+  }
+  
+  .circle {
+    fill: none;
+    stroke: #00FF00;
+    stroke-width: 3.8;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.5s ease-in-out;
+  }
+  
+  .percentage-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 5px;
+    text-anchor: middle;
+    fill: #00FF00;
+    transform: rotate(90deg);
+  }
+  
+  .confidence-text {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #00FF00;
+    text-shadow: 0px 0px 8px #00FFFF;
+  }
+  

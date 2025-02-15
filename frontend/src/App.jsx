@@ -1,19 +1,101 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import "./App.css";
+import logo from "./assets/Web-Watchdogs.png"; // Import the logo
+import CircularProgressBar from "./CircularProgressBar"; // Import Circular Display Component
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [url, setUrl] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [confidenceScore, setConfidenceScore] = useState(null); // Confidence Score
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message))
-      .catch((err) => console.error("Error fetching data:", err));
-  }, []);
+  const handleScan = async (e) => {
+    e.preventDefault();
+    if (!url) return alert("Please enter a URL");
+
+    setLoading(true);
+    setProgress(0);
+    setConfidenceScore(null); // Reset confidence score
+
+    // Simulating loading bar progress
+    let progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 90) {
+          clearInterval(progressInterval);
+          return prev;
+        }
+        return prev + 10; // Increases progress gradually
+      });
+    }, 300);
+
+    try {
+      // Simulated response for now, will be replaced with backend response later
+      const simulatedResponse = {
+        status: "safe",
+        message: "This website appears to be safe.",
+        confidence: Math.floor(Math.random() * 101), // Random percentage (0-100)
+      };
+      setResult(simulatedResponse);
+      setConfidenceScore(simulatedResponse.confidence);
+    } catch (error) {
+      alert("Error analyzing the URL");
+    }
+
+    clearInterval(progressInterval);
+    setProgress(100); // Set to 100% when done
+    setLoading(false);
+  };
 
   return (
-    <div>
-      <h1>FastAPI + React</h1>
-      <p>Message from backend: {message}</p>
+    <div className="container">
+      {/* Logo with Glow Animation */}
+      <img src={logo} alt="Web Watchdogs Logo" className="logo ultra-glow" />
+      
+      <h1>Phishing Website Detector</h1>
+
+      <form method="post" onSubmit={handleScan}>
+        <div className="input-container">
+          {/* Neon Glowing Input Box */}
+          <input
+            type="text"
+            placeholder="Enter website URL"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            className="input-box"
+          />
+          
+          {/* Animated Glowing Button */}
+          <button disabled={loading} className="glow-button">
+            {loading ? "Scanning..." : "Scan Website"}
+          </button>
+        </div>
+      </form>
+
+      {/* Loading Bar (Keeps Showing During Scan) */}
+      {loading && (
+        <div className="loading-bar-container">
+          <div className="loading-bar" style={{ width: `${progress}%` }}>
+            {progress}%
+          </div>
+        </div>
+      )}
+
+      {/* Display Result Section */}
+      {result && (
+        <div className={`result ${result.status}`}>
+          <h2>Result: {result.status}</h2>
+          <p>{result.message}</p>
+        </div>
+      )}
+
+      {/* Circular Percentage Display (Appears after scan) */}
+      {confidenceScore !== null && (
+        <div className="circle-wrapper">
+          <CircularProgressBar percentage={confidenceScore} />
+          <p className="confidence-text">Confidence Score</p>
+        </div>
+      )}
     </div>
   );
 }
