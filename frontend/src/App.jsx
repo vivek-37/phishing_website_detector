@@ -30,16 +30,30 @@ function App() {
     }, 300);
 
     try {
-      // Simulated response for now, will be replaced with backend response later
-      const simulatedResponse = {
-        status: "safe",
-        message: "This website appears to be safe.",
-        confidence: Math.floor(Math.random() * 101), // Random percentage (0-100)
-      };
-      setResult(simulatedResponse);
-      setConfidenceScore(simulatedResponse.confidence);
+      // Send URL to backend
+      const response = await fetch("http://127.0.0.1:8000/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send URL to backend");
+      }
+
+      const data = await response.json();
+      console.log("Backend Response:", data);
+
+      // Show result in frontend
+      setResult({
+        status: "received",
+        message: `URL Received: ${data.url}`,
+      });
+
+      setConfidenceScore(100); // Placeholder confidence score
     } catch (error) {
-      alert("Error analyzing the URL");
+      console.error("Error:", error);
+      alert("Error sending the URL to the backend");
     }
 
     clearInterval(progressInterval);
