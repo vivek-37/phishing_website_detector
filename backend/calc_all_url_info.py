@@ -123,7 +123,7 @@ with open("phishing_website_detector/X1.pkl", "rb") as file:
     model = pickle.load(file)
 
 # Example Label Encoders (replace with your actual encoders)
-label_encoders = {
+label_encoders = { 
     'FILENAME': LabelEncoder(),
     'URL': LabelEncoder(),
     'Domain': LabelEncoder(),
