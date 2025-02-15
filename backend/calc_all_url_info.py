@@ -215,11 +215,12 @@ def predict_from_url(url, model, label_encoders=None):
 # Example Usage
 # Load your trained Random Forest model (replace model with your actual model)
 from sklearn.ensemble import RandomForestClassifier
-import joblib  # For loading the trained model
+import pickle  # For loading the trained model
 
 # Load the pre-trained model
-model = joblib.load("path_to_your_trained_model.pkl")  # Replace with the path to your model
-
+with open("random_forest_model.pkl", "rb") as file:
+    model = pickle.load(file)
+    
 # Example Label Encoders (replace with your actual encoders)
 label_encoders = {
     'FILENAME': LabelEncoder(),
