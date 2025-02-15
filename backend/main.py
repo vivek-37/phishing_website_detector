@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from playwright.async_api import async_playwright
@@ -21,7 +21,6 @@ app.add_middleware(
 class URLRequest(BaseModel):
     url: str
 
-
 # Function to fetch dynamic HTML (async version for FastAPI)
 async def get_dynamic_html(url):
     async with async_playwright() as p:
@@ -34,18 +33,55 @@ async def get_dynamic_html(url):
 
 # Function to analyze sentiment using OpenAI API
 def analyze_sentiment(url):
-    return
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model": "gpt-4o-mini",
+        "messages": [
+            {"role": "system", "content": ""},
+            {"role": "user", "content": ""}
+        ]
+    }
+    response = requests.post(OPENAI_API_URL, json=data, headers=headers)
+    
+    if response.status_code == 200:
+        response_data = response.json()
+        return response_data["choices"][0]["message"]["content"]
+    else:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
 
 # Function to classify phishing type using OpenAI API
 def classify_phishing(url):
-    return 
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "model": "gpt-4o-mini",
+        "messages": [
+            {"role": "system", "content": ""},
+            {"role": "user", "content": ""}
+        ]
+    }
+    response = requests.post(OPENAI_API_URL, json=data, headers=headers)
+    
+    if response.status_code == 200:
+        response_data = response.json()
+        return response_data["choices"][0]["message"]["content"]
+    else:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
 
 
 # Test route
 @app.get("/")
-def main():
+def test():
     return {"message": "FastAPI backend is running!"}
 
+# Recieving input from a form and starts computing all parameters
+@app.post("/")
+def main(url: str = Form(...))
 
 
 
