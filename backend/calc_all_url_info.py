@@ -218,9 +218,9 @@ from sklearn.ensemble import RandomForestClassifier
 import pickle  # For loading the trained model
 
 # Load the pre-trained model
-with open("random_forest_model.pkl", "rb") as file:
+with open("./phishing_website_detector/random_forest_model.pkl", "rb") as file:
     model = pickle.load(file)
-    
+
 # Example Label Encoders (replace with your actual encoders)
 label_encoders = {
     'FILENAME': LabelEncoder(),
