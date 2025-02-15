@@ -3,10 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from playwright.sync_api import sync_playwright
 import os
+from calc_all_url_info import *
 
 app = FastAPI()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "your-openai-api-key")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Add CORS middleware
 app.add_middleware(

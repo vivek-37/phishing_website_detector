@@ -4,7 +4,7 @@ import string
 import requests
 from sklearn.preprocessing import LabelEncoder
 
-OPR_API_KEY = os.getenv("OPR_API_KEY", "your-opr-api-key")
+OPR_API_KEY = os.getenv("OPR_API_KEY")
 TOP_SITES_URL = "https://openpagerank.com/api/v1.0/getPageRank"
 
 def get_min(src, tar):
