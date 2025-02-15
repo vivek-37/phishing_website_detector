@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import string
 import requests
 from sklearn.preprocessing import LabelEncoder
+import os
 
 OPR_API_KEY = os.getenv("OPR_API_KEY")
 TOP_SITES_URL = "https://openpagerank.com/api/v1.0/getPageRank"
@@ -212,33 +213,33 @@ def predict_from_url(url, model, label_encoders=None):
     return prediction[0]
 
 # Example Usage
-if name == "main":
-    # Load your trained Random Forest model (replace model with your actual model)
-    from sklearn.ensemble import RandomForestClassifier
-    import joblib  # For loading the trained model
-    
-    # Load the pre-trained model
-    model = joblib.load("path_to_your_trained_model.pkl")  # Replace with the path to your model
-    
-    # Example Label Encoders (replace with your actual encoders)
-    label_encoders = {
-        'FILENAME': LabelEncoder(),
-        'URL': LabelEncoder(),
-        'Domain': LabelEncoder(),
-        'TLD': LabelEncoder()
-    }
-    
-    # Fit the encoders on your training data (replace with your actual training data)
-    # Example:
-    # training_data = pd.read_csv("path_to_training_data.csv")
-    # label_encoders['FILENAME'].fit(training_data['FILENAME'])
-    # label_encoders['URL'].fit(training_data['URL'])
-    # label_encoders['Domain'].fit(training_data['Domain'])
-    # label_encoders['TLD'].fit(training_data['TLD'])
-    
-    # Example URL
-    url = "https://example.com/path?query=123&symbol=@!"
-    
-    # Predict
-    result = predict_from_url(url, model, label_encoders)
-    print("Prediction:", result) # change the given function so that it fits the trained model rf in the notebook also write the predicted output for example urls
+# Load your trained Random Forest model (replace model with your actual model)
+from sklearn.ensemble import RandomForestClassifier
+import joblib  # For loading the trained model
+
+# Load the pre-trained model
+model = joblib.load("path_to_your_trained_model.pkl")  # Replace with the path to your model
+
+# Example Label Encoders (replace with your actual encoders)
+label_encoders = {
+    'FILENAME': LabelEncoder(),
+    'URL': LabelEncoder(),
+    'Domain': LabelEncoder(),
+    'TLD': LabelEncoder()
+}
+
+# Fit the encoders on your training data (replace with your actual training data)
+# Example:
+# training_data = pd.read_csv("path_to_training_data.csv")
+# label_encoders['FILENAME'].fit(training_data['FILENAME'])
+# label_encoders['URL'].fit(training_data['URL'])
+# label_encoders['Domain'].fit(training_data['Domain'])
+# label_encoders['TLD'].fit(training_data['TLD'])
+
+# Example URL
+url = "https://example.com/path?query=123&symbol=@!"
+
+# Predict
+print('predicting')
+result = predict_from_url(url, model, label_encoders)
+print("Prediction:", result) # change the given function so that it fits the trained model rf in the notebook also write the predicted output for example urls

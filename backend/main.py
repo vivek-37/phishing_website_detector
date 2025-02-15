@@ -144,3 +144,8 @@ def main(url: str = Form(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/model1")
+def model1(url: str):
+    
+    return
