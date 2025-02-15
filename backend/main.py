@@ -21,7 +21,7 @@ class URLRequest(BaseModel):
     url: str
 
 # Function to fetch dynamic HTML (async version for FastAPI)
-async def get_dynamic_html(url):
+def get_dynamic_html(url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -92,13 +92,10 @@ def main(url: str = Form(...)):
 
         # Determine phishing type if suspicious
         if "phishing" in result.lower():
-            phishing_type = classify_phishing(html_content)
+            phishing_type = classify_phishing(url, html_content)
             return {"status": "phishing", "type": phishing_type}
         else:
             return {"status": "safe"}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-
