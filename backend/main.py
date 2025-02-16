@@ -1,10 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import validator
+import validators
 from calc_all_url_info import *
 from playwright.sync_api import sync_playwright
 import os
+import pickle
+from sklearn.preprocessing import LabelEncoder
 
 # Create FastAPI instance
 app = FastAPI()
@@ -74,7 +76,7 @@ async def sentiment(url):
         "response_format": "json"
     }
 
-    response = requests.post(api_url, json=data, headers=headers)
+    response = requests.post(openai_api_url, json=data, headers=headers)
     if response.status_code == 200:
         response_data = response.json()
         return response_data["choices"][0]["message"]["content"]
@@ -87,7 +89,7 @@ def classify_phishing(url, html_content):
     send a request to openai api and get output of the form:
     classification: 1 or 2 keyword classification
     '''
-    api_url = "https://api.openai.com/v1/chat/completions"
+    openai_api_url = "https://api.openai.com/v1/chat/completions"
 
     headers = {
         "Authorization": f"Bearer {OPENAI_API_KEY}",
@@ -100,7 +102,7 @@ def classify_phishing(url, html_content):
             {"role": "user", "content": html_content}
         ]
     }
-    response = requests.post(api_url, json=data, headers=headers)
+    response = requests.post(openai_api_url, json=data, headers=headers)
     
     if response.status_code == 200:
         response_data = response.json()
@@ -123,19 +125,26 @@ async def scan_url(data: URLRequest):
     print(f"✅ Received URL: {received_url}")  # Print URL in backend
 
     # call calc
-    with open("phishing_website_detector/X1.pkl", "rb") as file:
+    with open("X1.pkl", "rb") as file:
         model = pickle.load(file)
 
-    result_url_scan = predict_from_url(received_url, model)
-    if result_url_scan == 0:
+    label_encoders = { 
+    'FILENAME': LabelEncoder(),
+    'URL': LabelEncoder(),
+    'Domain': LabelEncoder(),
+    'TLD': LabelEncoder()
+    }
+
+    result_url_scan = predict_from_url(received_url, model, label_encoders)
+    if result_url_scan == 1:
         conclusion_url = "Possible phishing website"
     else:
         conclusion_url = "Mostly safe website"
     
     return {
-        "message": "URL received successfully", "url": received_url,
-        "message": f"Phishing URL Predictor says that it is a {conclusion_url}",
-        "message": "Querying LLM Sentiment"
+        "message1": "URL received successfully", "url": received_url,
+        "message2": f"Phishing URL Predictor says that it is a {conclusion_url}",
+        "message3": "Querying LLM Sentiment"
     }
 
 

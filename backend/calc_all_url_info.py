@@ -23,9 +23,11 @@ def is_domain_ip(domain):
     return 1
 
 def tld_legitimate_prob(tld):
-    df = pd.read_csv("phishing_website_detector/PhiUSIIL_Phishing_URL_Dataset.csv")
+    df = pd.read_csv("PhiUSIIL_Phishing_URL_Dataset.csv")
     tld_dict = df.drop_duplicates().set_index("TLD")["TLDLegitimateProb"].to_dict()
-    return tld_dict[tld]
+    if tld in tld_dict.keys():
+        return tld_dict[tld]
+    return None
 
 
 def no_of_letters_in_url(url):
@@ -115,25 +117,25 @@ def predict_from_url(url, model, label_encoders=None):
 
 # Example Usage
 # Load your trained Random Forest model (replace model with your actual model)
-from sklearn.ensemble import RandomForestClassifier
-import pickle  # For loading the trained model
+# from sklearn.ensemble import RandomForestClassifier
+# import pickle  # For loading the trained model
 
-# Load the pre-trained model
-with open("phishing_website_detector/X1.pkl", "rb") as file:
-    model = pickle.load(file)
+# # Load the pre-trained model
+# with open("phishing_website_detector/X1.pkl", "rb") as file:
+#     model = pickle.load(file)
 
-# Example Label Encoders (replace with your actual encoders)
-label_encoders = { 
-    'FILENAME': LabelEncoder(),
-    'URL': LabelEncoder(),
-    'Domain': LabelEncoder(),
-    'TLD': LabelEncoder()
-}
+# # Example Label Encoders (replace with your actual encoders)
+# label_encoders = { 
+#     'FILENAME': LabelEncoder(),
+#     'URL': LabelEncoder(),
+#     'Domain': LabelEncoder(),
+#     'TLD': LabelEncoder()
+# }
 
-# Example URL
-url = "https://www.southbankmosaics.com"
+# # Example URL
+# url = "https://www.southbankmosaics.com"
 
-# Predict
-print('predicting')
-result = predict_from_url(url, model, label_encoders)
-print("Prediction:", result) # change the given function so that it fits the trained model rf in the notebook also write the predicted output for example urls
+# # Predict
+# print('predicting')
+# result = predict_from_url(url, model, label_encoders)
+# print("Prediction:", result) # change the given function so that it fits the trained model rf in the notebook also write the predicted output for example urls
